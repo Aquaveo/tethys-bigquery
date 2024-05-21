@@ -10,7 +10,7 @@ class NwmBigqueryTutorial(TethysAppBase):
     description = 'Tutorial for an application that allows users to query data from the National Water Model and visualize the results.'
     package = 'nwm_bigquery_tutorial'  # WARNING: Do not change this value
     index = 'home'
-    icon = f'{package}/images/NWM_app_image.png'
+    icon = f'{package}/images/NWM_app_icon.png'
     root_url = 'nwm-bigquery-tutorial'
     color = '#5CA4FD'
     tags = ''
