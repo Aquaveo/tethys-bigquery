@@ -1,13 +1,69 @@
-from tethys_sdk.layouts import MapLayout
 from tethys_sdk.routing import controller
+from tethys_sdk.layouts import MapLayout
+from tethys_sdk.gizmos import DatePicker, SelectInput, TextInput, Button
+
 from .app import NwmBigqueryTutorial as app
 
 @controller(name="home", app_workspace=True)
 class NWMBigQueryMap(MapLayout):
     app = app
     base_template = 'nwm_bigquery_tutorial/base.html'
+    template_name = 'nwm_bigquery_tutorial/home.html'
     map_title = 'National Water Model BigQuery Tutorial'
     map_subtitle = 'NWM Big Query Outputs'
+
+    def get_context(self, request, *args, **kwargs):
+        # Reach ID text input field Gizmo
+        reach_id = TextInput(display_text='Reach ID', name='reach_id', placeholder='Enter a Reach ID', attributes={"class": "form-input"})
+
+        # Create time range options for start and end reference times
+        time_range = [(f"{i}:00:00", f"{i}:00:00") for i in range(0, 24)]
+        start_time_options = [('Select a start reference time', '')] + time_range
+        end_time_options = [('Select an end reference time', '')] + time_range
+
+        # Start and end reference date and time Gizmos
+        start_date = DatePicker(display_text='Start Reference Date', name='start_date', attributes={"class": "form-input"})
+        start_time = SelectInput(display_text='Start Reference Time', name='start_time', multiple=False, options=start_time_options, attributes={"class": "form-input"})
+        end_date = DatePicker(display_text='End Reference Date', name='end_date', attributes={"class": "form-input"})
+        end_time = SelectInput(display_text='End Reference Time', name='end_time', multiple=False, options=end_time_options, attributes={"class": "form-input"})
+
+        # Table and variable select input drop down Gizmos
+        table_options = [('Select a table', ''),
+                         ('Short Range', 'short_range'),
+                         ('Medium Range', 'medium_range'),  
+                         ('Medium Range No DA', 'medium_range_no_da'),  
+                         ('Long Range', 'long_range')]
+       
+        table = SelectInput(display_text='Table', name='table', multiple=False, options=table_options, attributes={"class": "form-input"})
+        variable_options = [('Select a variable', ''), ('Streamflow', 'streamflow'), ('Velocity', 'velocity')]
+        variable = SelectInput(display_text='Variable', name='variable', multiple=False, options=variable_options, attributes={"class": "form-input"})\
+       
+        # Forecast offset text input field Gizmo - this will be hidden but is used in the query and will be
+        # changed in javascript dynamically based on the table that's been selected
+        forecast_offset = TextInput(name='forecast_offset', attributes={"style": "display:none;"})
+
+        # Download and Query buttons
+        download_button = Button(display_text='Download', name='download', style='primary', attributes={"id": "download-button"})
+        query_button = Button(display_text='Query', name='query', style='success', submit=True, attributes={'form': 'query-form'})
+
+        # Generate the base context to add Gizmos to
+        context = super().get_context(request, *args, **kwargs)
+
+        # Add Gizmos to the context
+        context['reach_id'] = reach_id
+        context['start_date'] = start_date
+        context['start_time'] = start_time
+        context['end_date'] = end_date
+        context['end_time'] = end_time
+        context['table'] = table
+        context['variable'] = variable
+        context['download_button'] = download_button
+        context['query_button'] = query_button
+        context['forecast_offset'] = forecast_offset
+
+        return context
+
+
 
     def compose_layers(self, request, map_view, app_workspace, *args, **kwargs):
         # Streamflow layer
