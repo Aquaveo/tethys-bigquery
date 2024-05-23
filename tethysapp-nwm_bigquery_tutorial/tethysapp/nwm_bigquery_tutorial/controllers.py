@@ -1,8 +1,17 @@
+import os
+import datetime
+
 from tethys_sdk.routing import controller
 from tethys_sdk.layouts import MapLayout
 from tethys_sdk.gizmos import DatePicker, SelectInput, TextInput, Button
 
+from django.http import JsonResponse
+
+from google.cloud.bigquery import Client
+
 from .app import NwmBigqueryTutorial as app
+
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = os.getcwd() + 'name_of_your_file_here.json'
 
 @controller(name="home", app_workspace=True)
 class NWMBigQueryMap(MapLayout):
@@ -62,6 +71,60 @@ class NWMBigQueryMap(MapLayout):
         context['forecast_offset'] = forecast_offset
 
         return context
+
+    def post(self, request, *args, **kwargs):
+        form_data = request.POST
+
+        query_results = self.run_query(form_data)
+
+        return JsonResponse({'success': True,
+                             'input': query_results.to_dict()})
+    
+    def run_query(self, query_parameters):
+        project_id = app.get_custom_setting('project_id')
+        client = Client( project=project_id)
+       
+        reach_id = query_parameters.get('reach_id')
+        table = query_parameters.get("table")
+        variable_choice = query_parameters.get("variable")
+
+        start_date = query_parameters.get('start_date')
+        start_date = datetime.datetime.strptime(start_date, '%m/%d/%Y').date()
+        start_date = str(start_date.strftime("%Y-%m-%d"))
+
+        start_time = query_parameters.get('start_time')
+
+        end_date = query_parameters.get('end_date')
+        end_date = datetime.datetime.strptime(end_date, '%m/%d/%Y').date()
+        end_date = str(end_date.strftime("%Y-%m-%d"))
+
+        end_time = query_parameters.get('end_time')
+
+        forecast_offset = query_parameters.get('forecast_offset')
+
+        query = f"""
+                    SELECT
+                        reference_time,
+                        ensemble,
+                        {variable_choice} as variable_value
+                    FROM
+                        `bigquery-public-data.national_water_model.{table}_channel_rt`
+                    WHERE
+                        feature_id = {reach_id}
+                        AND
+                        reference_time >= '{start_date} {start_time}'
+                        AND
+                        reference_time <= '{end_date} {end_time}'
+                        AND
+                        forecast_offset = {forecast_offset}
+                    ORDER BY
+                        reference_time, ensemble
+                """
+        
+        job = client.query(query)
+        df = job.to_dataframe()
+       
+        return df
 
 
 

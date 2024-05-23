@@ -18,14 +18,15 @@ window.onload = function() {
             TETHYS_APP_BASE.alert("danger", "Make sure to fill in all required fields.");
             return;
         }
-        console.log("Reach ID: ", formData.get('reach_id'));
-        console.log("Start Date: ", formData.get('start_date'));
-        console.log("Start Time: ", formData.get('start_time'));
-        console.log("End Date: ", formData.get('end_date'));
-        console.log("End Time: ", formData.get('end_time'));
-        console.log("Table: ", formData.get('table'));
-        console.log("Variable: ", formData.get('variable'));
-        console.log("Forecast Offset: ", formData.get('forecast_offset'));
+        
+        fetch('/apps/nwm-bigquery-tutorial/', {
+            method: 'POST',
+            body: formData
+         }).then(response => response.json())
+         .then(data => {
+            console.log(data);
+        });
+
     });
 }
     
