@@ -76,9 +76,13 @@ class NWMBigQueryMap(MapLayout):
         form_data = request.POST
 
         query_results = self.run_query(form_data)
+        data, layout = self.get_graph_data(query_results, form_data.get('variable'))
+        download_data = self.get_download_data(query_results)
 
-        return JsonResponse({'success': True,
-                             'results': query_results.to_dict()})
+        return JsonResponse({'message': "Success",
+                             'download_data':download_data,
+                             'data': data,
+                             'graph_layout': layout})
     
     def run_query(self, query_parameters):
         project_id = app.get_custom_setting('project_id')
@@ -126,7 +130,53 @@ class NWMBigQueryMap(MapLayout):
        
         return df
 
+    def get_graph_data(self, query_results, variable_choice):
+        ensembles = query_results['ensemble'].unique().tolist()
+        data_sets = []
+        for ensemble in ensembles:
+            # Only make the 0 ensemble data visible by default in our graph
+            visible = True if ensemble == 0 else 'legendonly'
+            filtered_rows = query_results[query_results['ensemble'] == ensemble]
+            
+            x_data = filtered_rows["reference_time"].tolist()
+            y_data = filtered_rows["variable_value"].tolist()
 
+            data_sets.append({'x': x_data, 'y': y_data, 'name': f'Ensemble {ensemble}', 'visible': visible})
+            
+        min_values = query_results.groupby('reference_time')['variable_value'].min().tolist()
+        max_values = query_results.groupby('reference_time')['variable_value'].max().tolist()
+        
+        datetimes = query_results['reference_time'].unique().tolist()
+        data_sets.append({'x': datetimes, 'y': min_values, 'name': 'Min Values', 'visible': 'legendonly', })
+        data_sets.append({'x': datetimes, 'y': max_values, 'name': 'Max Values', 'visible': 'legendonly', })
+
+        # Create a layout dictionary to customize the appearance of the graph
+        layout = {
+            'xaxis': {'title': 'Date/Time'},
+            'yaxis': {'title': f'{variable_choice}'},
+            'template': 'plotly_dark'
+        }
+
+        return data_sets, layout
+    
+    def get_download_data(self, query_results):
+        ensembles = query_results['ensemble'].unique()
+        data_groups = []
+        
+        for ensemble in ensembles:
+            rows = query_results[query_results['ensemble'] == ensemble]
+            new_values_dict = {"group_name": f"Ensemble {ensemble}", "reference_time": rows["reference_time"].tolist(), "variable_values": rows["variable_value"].tolist(), "ensemble": rows["ensemble"].tolist()}
+            data_groups.append(new_values_dict)
+
+        min_indices = query_results.groupby('reference_time')['variable_value'].idxmin()
+        max_indices = query_results.groupby('reference_time')['variable_value'].idxmax()
+        min_rows = query_results.loc[min_indices]
+        max_rows = query_results.loc[max_indices]
+
+        data_groups.append({"group_name": "Minimum Values", "reference_time": min_rows["reference_time"].tolist(), "variable_values": min_rows["variable_value"].tolist(), "ensemble": min_rows["ensemble"].tolist()})
+        data_groups.append({"group_name": "Maximum Values", "reference_time": max_rows["reference_time"].tolist(), "variable_values": max_rows["variable_value"].tolist(), "ensemble": max_rows["ensemble"].tolist()})
+
+        return data_groups
 
     def compose_layers(self, request, map_view, app_workspace, *args, **kwargs):
         # Streamflow layer
