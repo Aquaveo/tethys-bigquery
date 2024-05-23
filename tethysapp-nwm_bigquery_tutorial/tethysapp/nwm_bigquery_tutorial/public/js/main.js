@@ -18,13 +18,19 @@ window.onload = function() {
             TETHYS_APP_BASE.alert("danger", "Make sure to fill in all required fields.");
             return;
         }
+
+        MAP_LAYOUT.show_plot();
+        MAP_LAYOUT.update_plot(``, {}, {});
         
         fetch('/apps/nwm-bigquery-tutorial/', {
             method: 'POST',
             body: formData
          }).then(response => response.json())
          .then(data => {
-            console.log(data);
+            var variable = formData.get('variable');
+            var reach = formData.get('reach_id');
+            MAP_LAYOUT.update_plot(`${variable} at ${reach}`, data.data, data.graph_layout);
+
         });
 
     });

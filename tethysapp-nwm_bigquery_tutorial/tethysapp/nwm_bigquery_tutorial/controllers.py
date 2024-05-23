@@ -20,6 +20,7 @@ class NWMBigQueryMap(MapLayout):
     template_name = 'nwm_bigquery_tutorial/home.html'
     map_title = 'National Water Model BigQuery Tutorial'
     map_subtitle = 'NWM Big Query Outputs'
+    plot_slide_sheet = True
 
     def get_context(self, request, *args, **kwargs):
         # Reach ID text input field Gizmo
