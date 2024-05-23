@@ -1,5 +1,5 @@
 from tethys_sdk.base import TethysAppBase
-
+from tethys_sdk.app_settings import CustomSetting
 
 class NwmBigqueryTutorial(TethysAppBase):
     """
@@ -16,3 +16,14 @@ class NwmBigqueryTutorial(TethysAppBase):
     tags = ''
     enable_feedback = False
     feedback_emails = []
+
+    def custom_settings(self):
+        custom_settings = (
+            CustomSetting(
+                name='project_id',
+                type=CustomSetting.TYPE_STRING,
+                description='Google Cloud Project ID',
+                required=True
+            ),
+        )
+        return custom_settings
