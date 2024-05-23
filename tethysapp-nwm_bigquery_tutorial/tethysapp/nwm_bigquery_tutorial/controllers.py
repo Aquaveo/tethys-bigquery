@@ -78,7 +78,7 @@ class NWMBigQueryMap(MapLayout):
         query_results = self.run_query(form_data)
 
         return JsonResponse({'success': True,
-                             'input': query_results.to_dict()})
+                             'results': query_results.to_dict()})
     
     def run_query(self, query_parameters):
         project_id = app.get_custom_setting('project_id')
