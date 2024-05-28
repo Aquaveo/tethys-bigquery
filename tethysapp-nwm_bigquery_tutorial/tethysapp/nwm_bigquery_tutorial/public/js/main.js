@@ -7,7 +7,7 @@ window.onload = function() {
         $("#forecast_offset").val(forecastOffsets[table]);
      });
 
-    document.getElementById('query-form').addEventListener('submit', function(event) {
+     $("#query-form").on("submit", function(event) {
         event.preventDefault();
         var formData = new FormData(this);
         
