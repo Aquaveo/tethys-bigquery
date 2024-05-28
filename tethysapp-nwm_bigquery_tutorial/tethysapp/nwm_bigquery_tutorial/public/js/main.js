@@ -1,5 +1,5 @@
-import Point from "https://js.arcgis.com/4.29/@arcgis/core/geometry/Point.js";
-import *  as geometryEngine from "https://js.arcgis.com/4.29/@arcgis/core/geometry/geometryEngine.js";
+// import Point from "https://js.arcgis.com/4.29/@arcgis/core/geometry/Point.js";
+// import *  as geometryEngine from "https://js.arcgis.com/4.29/@arcgis/core/geometry/geometryEngine.js";
 
 const forecastOffsets = {"short_range": 1, "medium_range": 3, "medium_range_no_da": 3, "long_range": 6};
 
@@ -240,13 +240,15 @@ window.onload = function() {
          });
     })
 
-    document.getElementById('query-form').addEventListener('submit', function(event) {
+    $("#query-form").on("submit", function(event) {
+        console.log("Here we go!");
+
         event.preventDefault();
         var formData = new FormData(this);
         
         // Check if all required fields are filled in
         const requiredFields = ['reach_id', 'start_date', 'start_time', 'end_date', 'end_time', 'table', 'variable'];
-        const missingFields = requiredFields.filter(field => !formData.has(field));
+        const missingFields = requiredFields.filter(field => !formData.get(field));
         if (missingFields.length > 0) {
             TETHYS_APP_BASE.alert("danger", "Make sure to fill in all required fields.");
             return;
