@@ -13,7 +13,7 @@ window.onload = function() {
         
         // Check if all required fields are filled in
         const requiredFields = ['reach_id', 'start_date', 'start_time', 'end_date', 'end_time', 'table', 'variable'];
-        const missingFields = requiredFields.filter(field => !formData.has(field));
+        const missingFields = requiredFields.filter(field => !formData.get(field));
         if (missingFields.length > 0) {
             TETHYS_APP_BASE.alert("danger", "Make sure to fill in all required fields.");
             return;
