@@ -163,15 +163,18 @@ function processStreamServiceQueryResult(zoom, point, response, map) {
  }
 
 window.onload = function() {
-    var map = TETHYS_MAP_VIEW.getMap();
+    
 
-    console.log(map);
+    
 
     $("#table").on("change", function() {
         console.log("Hi");
         var table = $("#table").val();
         $("#forecast_offset").val(forecastOffsets[table]);
     });
+
+    var map = TETHYS_MAP_VIEW.getMap();
+    console.log(map);
     
     map.on('click', function(evt) {
         console.log("Map clicked");
@@ -211,6 +214,7 @@ window.onload = function() {
             }
 
             const url = new URL(`${urlService}/5/query`);
+            console.log(url);
             url.search = new URLSearchParams(queryLayer5);
             axios.get(url).then((response) => {
                 console.log(response.data);
