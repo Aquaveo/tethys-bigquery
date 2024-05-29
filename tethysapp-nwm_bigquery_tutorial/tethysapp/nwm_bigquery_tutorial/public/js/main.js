@@ -2,7 +2,6 @@ const forecastOffsets = {"short_range": 1, "medium_range": 3, "medium_range_no_d
 
 window.onload = function() {
     $("#table").on("change", function() {
-        console.log("Hi");
         var table = $("#table").val();
         $("#forecast_offset").val(forecastOffsets[table]);
      });
