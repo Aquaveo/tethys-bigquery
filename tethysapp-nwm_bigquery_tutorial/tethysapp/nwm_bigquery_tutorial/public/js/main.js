@@ -168,7 +168,6 @@ window.onload = function() {
     
 
     $("#table").on("change", function() {
-        console.log("Hi");
         var table = $("#table").val();
         $("#forecast_offset").val(forecastOffsets[table]);
     });
