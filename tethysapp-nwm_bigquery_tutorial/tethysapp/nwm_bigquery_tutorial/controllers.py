@@ -8,6 +8,12 @@ class NWMBigQueryMap(MapLayout):
     base_template = 'nwm_bigquery_tutorial/base.html'
     map_title = 'National Water Model BigQuery Tutorial'
     map_subtitle = 'NWM Big Query Outputs'
+    basemaps = [
+        'OpenStreetMap',
+        'ESRI',
+        'Stamen',
+        {'Stamen': {'layer': 'toner', 'control_label': 'Black and White'}},
+    ]
 
     def compose_layers(self, request, map_view, app_workspace, *args, **kwargs):
         # Streamflow layer
