@@ -163,10 +163,6 @@ function processStreamServiceQueryResult(zoom, point, response, map) {
  }
 
 window.onload = function() {
-    
-
-    
-
     $("#table").on("change", function() {
         var table = $("#table").val();
         $("#forecast_offset").val(forecastOffsets[table]);
