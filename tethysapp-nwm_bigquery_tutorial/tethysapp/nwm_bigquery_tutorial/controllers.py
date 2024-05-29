@@ -21,6 +21,12 @@ class NWMBigQueryMap(MapLayout):
     map_title = 'National Water Model BigQuery Tutorial'
     map_subtitle = 'NWM Big Query Outputs'
     plot_slide_sheet = True
+    basemaps = [
+        'OpenStreetMap',
+        'ESRI',
+        'Stamen',
+        {'Stamen': {'layer': 'toner', 'control_label': 'Black and White'}},
+    ]
 
     def get_context(self, request, *args, **kwargs):
         # Reach ID text input field Gizmo
