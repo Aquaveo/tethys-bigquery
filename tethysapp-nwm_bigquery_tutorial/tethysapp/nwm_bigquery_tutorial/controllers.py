@@ -21,6 +21,12 @@ class NWMBigQueryMap(MapLayout):
     map_title = 'National Water Model BigQuery Tutorial'
     map_subtitle = 'NWM Big Query Outputs'
     plot_slide_sheet = True
+    basemaps = [
+        'OpenStreetMap',
+        'ESRI',
+        'Stamen',
+        {'Stamen': {'layer': 'toner', 'control_label': 'Black and White'}},
+    ]
 
     def get_context(self, request, *args, **kwargs):
         # Reach ID text input field Gizmo
@@ -181,7 +187,7 @@ class NWMBigQueryMap(MapLayout):
 
     def compose_layers(self, request, map_view, app_workspace, *args, **kwargs):
         # Streamflow layer
-        streamflow_layer = self.build_arc_gis_layer(endpoint='https://mapservice.nohrsc.noaa.gov/arcgis/rest/services/national_water_model/NWM_Stream_Analysis/MapServer',
+        streamflow_layer = self.build_arc_gis_layer(endpoint='https://mapservices.weather.noaa.gov/vector/rest/services/obs/NWM_Stream_Analysis/MapServer',
                                                             layer_id = "streamflow",
                                                             layer_name = "0",
                                                             layer_title = "Streamflow",
@@ -190,7 +196,7 @@ class NWMBigQueryMap(MapLayout):
                                                             selectable=True)
         
         # Local layer
-        local_layer = self.build_arc_gis_layer(endpoint='https://mapservice.nohrsc.noaa.gov/arcgis/rest/services/national_water_model/NWM_Stream_Analysis/MapServer',
+        local_layer = self.build_arc_gis_layer(endpoint='https://mapservices.weather.noaa.gov/vector/rest/services/obs/NWM_Stream_Analysis/MapServer',
                                                            layer_id = "local",
                                                            layer_name = "7",
                                                            layer_title = "Local",
@@ -199,7 +205,7 @@ class NWMBigQueryMap(MapLayout):
                                                            selectable=True)
         
         # Anomaly layer
-        anomaly_layer = self.build_arc_gis_layer(endpoint='https://mapservice.nohrsc.noaa.gov/arcgis/rest/services/national_water_model/NWM_Stream_Analysis/MapServer',
+        anomaly_layer = self.build_arc_gis_layer(endpoint='https://mapservices.weather.noaa.gov/vector/rest/services/obs/NWM_Stream_Analysis/MapServer',
                                                            layer_id = "anomaly",
                                                            layer_name = "14",
                                                            layer_title = "Anomaly",
