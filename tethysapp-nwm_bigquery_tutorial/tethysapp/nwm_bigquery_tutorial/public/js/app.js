@@ -11,6 +11,11 @@ var closer;
 
 var overlay;
 
+var query_run = false; // Check if the query has been run with the current input selections
+var csvData;
+var variable_selected;
+var reach_id_selected;
+
 //get distance by zoom
 function getDistanceByZoom(zoom) {
     switch (true) {
@@ -218,6 +223,45 @@ $(function() {
      };   
 
     map.addOverlay(overlay);
+
+    $(".form-control").on("input", function() {
+        query_run = false;
+      });
+
+    $(".form-control").datepicker({onSelect: function() {
+        query_run = false;
+    }
+    });
+
+    $("#download-button").on("click", function() {
+        if (query_run) {
+           var zip = new JSZip();
+           var folder = zip.folder(`result_data`);
+        
+           for (var group_name in csvData) {
+              
+              var csvFile = csvData[group_name].map(e => e.join(",")).join("\n");
+              folder.file(`${variable_selected}_at_reach_${reach_id_selected}_${group_name}_values.csv`, csvFile);
+           }
+           zip.generateAsync({type:"blob"})
+           .then(function(content) {
+              saveAs(content, `NWM_${variable_selected}_at_reach_${reach_id_selected}_result_data.zip`)
+           });
+              var blob = new Blob([csvFile], { type: 'text/csv;charset=utf-8;' });
+              var link = document.createElement("a");
+              var url = URL.createObjectURL(blob);
+              link.setAttribute("href", url);
+              link.setAttribute("download", `${variable_selected}_at_reach_${reach_id_selected}_${group_name}_values.csv`);
+              link.click();
+              link.remove();
+           
+           
+        
+        }
+        else {
+           TETHYS_APP_BASE.alert("danger", "Please run the query before downloading the CSV file.");
+        }
+     });
     
     map.on('click', function(evt) {
         const pixel = map.getEventPixel(evt.originalEvent);
@@ -268,6 +312,7 @@ $(function() {
                 let currentStreamFeatureID = processStreamServiceQueryResult(actual_zoom, esriMapPoint, response.data, map)
                 if (currentStreamFeatureID != undefined) {
                 $("#reach_id").val(currentStreamFeatureID);
+                query_run = false;
                 }
             }).catch((error) => {
                 console.log(error);
@@ -335,11 +380,30 @@ $(function() {
             if (data.data[0].x.length == 0) {
                 TETHYS_APP_BASE.alert("danger", "No data was returned from your query. Please try again.");
                 $("#loading-gif-div").hide();
-                return;
+                
+                    return;
             }
             MAP_LAYOUT.update_plot(`${variable} at ${reach}`, data.data, data.graph_layout);
             $("#loading-gif-div").hide();
+            query_run = true;
+            
+            variable_selected = formData.get('variable_choice');
+            reach_id_selected = formData.get('reach_id');
+            csvData = {};
+            
+            var header = ["datetime", `${variable}`, "ensemble"];
 
+            data.download_data.forEach(obj => {
+                var time_values = obj.reference_time;
+                var variable_values = obj.variable_values;
+                var ensemble_values = obj.ensemble;
+                csvData[obj.group_name] = [];
+                csvData[obj.group_name].push(header);
+
+                for (var i = 0; i < time_values.length; i++) {
+                    csvData[obj.group_name].push([time_values[i], variable_values[i], ensemble_values[i]]);
+                }
+            });
         }).catch(error => {
             console.log(error);
             TETHYS_APP_BASE.alert("danger", "There was an issue loading that query's results. Please try again.");
