@@ -3,7 +3,11 @@
 {% load tethys_gizmos %}
 
 {% block app_content %}
-  {{ block.super }} # Add this line
+  {{ block.super }} 
+  <div id="popup" class="ol-popup">
+    <a href="#" id="popup-closer" class="ol-popup-closer">Close</a>
+    <div id="popup-content"></div>
+  </div>
 {% endblock %}
 
 {% block custom_map_tabs %}
@@ -42,5 +46,14 @@
   </div>
 </div>
    
+{% endblock %}
+
+
+
+{% block scripts %}
+  {{ block.super }}
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script type = "module" src="{% static 'nwm_bigquery_tutorial/js/app.js' %}"></script>
+
 {% endblock %}
 

@@ -21,6 +21,7 @@ class NWMBigQueryMap(MapLayout):
     map_title = 'National Water Model BigQuery Tutorial'
     map_subtitle = 'NWM Big Query Outputs'
     plot_slide_sheet = True
+    show_properties_popup = True
     basemaps = [
         'OpenStreetMap',
         'ESRI',
