@@ -44,3 +44,9 @@
    
 {% endblock %}
 
+{% block scripts %}
+  {{ block.super }}
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script type = "module" src="{% static 'nwm_bigquery_app/js/main.js' %}" defer></script>
+{% endblock %}
+

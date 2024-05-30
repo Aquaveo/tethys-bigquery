@@ -6,8 +6,11 @@ window.onload = function() {
         $("#forecast_offset").val(forecastOffsets[table]);
     });
 
+    var map = TETHYS_MAP_VIEW.getMap();
+    console.log(map);
+    
+
     $("#query-form").on("submit", function(event) {
-        console.log("Here we go!");
 
         event.preventDefault();
         var formData = new FormData(this);
@@ -68,5 +71,6 @@ window.onload = function() {
             $("#loading-gif-div").hide();
          });
     });
+    
 }
     
