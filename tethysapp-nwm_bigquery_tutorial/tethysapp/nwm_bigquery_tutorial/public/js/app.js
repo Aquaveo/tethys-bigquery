@@ -170,7 +170,7 @@ function getDistanceByZoom(zoom) {
           map.on('pointermove', function(e) {
             map.forEachFeatureAtPixel(e.pixel, function(feature, layer) {
                if (layer === lastHighlightedLayer) {
-                  content.innerHTML = `<p><strong>Reach ID:</strong> ${stationID}</p><p><strong>Reach Name:</strong> ${stationName}</p>`
+                  content.html(`<p><strong>Reach ID:</strong> ${stationID}</p><p><strong>Reach Name:</strong> ${stationName}</p>`);
                   var reach_line_feature = layer.getSource().getFeatures()[0]; // Get the line feature itself for coordinates
                   var coordinates = reach_line_feature.getGeometry().getCoordinates()[0]; // Get the first coordinate of the line
                   overlay.setPosition(coordinates);
