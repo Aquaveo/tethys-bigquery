@@ -133,7 +133,7 @@ class NWMBigQueryMap(MapLayout):
                         reference_time, ensemble
                 """
         
-        job = client.query(query)
+        job = client.query(query)                
         df = job.to_dataframe()
        
         return df
