@@ -11,8 +11,6 @@ class NWMBigQueryMap(MapLayout):
     basemaps = [
         'OpenStreetMap',
         'ESRI',
-        'Stamen',
-        {'Stamen': {'layer': 'toner', 'control_label': 'Black and White'}},
     ]
 
     def compose_layers(self, request, map_view, app_workspace, *args, **kwargs):
