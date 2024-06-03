@@ -23,8 +23,6 @@ class NWMBigQueryMap(MapLayout):
     basemaps = [
         'OpenStreetMap',
         'ESRI',
-        'Stamen',
-        {'Stamen': {'layer': 'toner', 'control_label': 'Black and White'}},
     ]
 
     def get_context(self, request, *args, **kwargs):
@@ -79,6 +77,9 @@ class NWMBigQueryMap(MapLayout):
         return context
 
     def post(self, request, *args, **kwargs):
+        import pdb 
+        pdb.set_trace()
+        
         form_data = request.POST
 
         query_results = self.run_query(form_data)
