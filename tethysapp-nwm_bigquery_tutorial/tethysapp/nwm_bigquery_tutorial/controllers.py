@@ -23,8 +23,6 @@ class NWMBigQueryMap(MapLayout):
     basemaps = [
         'OpenStreetMap',
         'ESRI',
-        'Stamen',
-        {'Stamen': {'layer': 'toner', 'control_label': 'Black and White'}},
     ]
 
     def get_context(self, request, *args, **kwargs):
