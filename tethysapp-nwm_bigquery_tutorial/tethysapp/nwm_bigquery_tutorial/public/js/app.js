@@ -5,7 +5,6 @@ const forecastOffsets = {"short_range": 1, "medium_range": 3, "medium_range_no_d
 
 var lastHighlightedLayer;
 
-var container;
 var content;
 var closer;
 
@@ -199,12 +198,12 @@ $(function() {
     });
 
     var map = TETHYS_MAP_VIEW.getMap();
-    container = document.getElementById('properties-popup');
-    content = document.getElementById('properties-popup-content');
-    closer = document.getElementById('properties-popup-close-btn');
+
+    content = $("#properties-popup-content");
+    closer = $("#properties-popup-close-btn");
 
     overlay = new ol.Overlay({
-        element: container,
+        element: document.getElementById('properties-popup'),
         autoPan: true,
         autoPanAnimation: {
         duration: 250
