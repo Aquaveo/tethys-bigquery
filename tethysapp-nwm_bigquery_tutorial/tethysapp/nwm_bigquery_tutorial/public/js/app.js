@@ -210,11 +210,11 @@ $(function() {
         }
     })
 
-    closer.onclick = function() {
+    closer.on("click", function() {
         overlay.setPosition(undefined);
         closer.blur();
         return false;
-     };   
+     });   
 
     map.addOverlay(overlay);
     
