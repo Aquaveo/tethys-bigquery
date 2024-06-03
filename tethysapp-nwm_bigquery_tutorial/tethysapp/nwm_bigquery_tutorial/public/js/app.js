@@ -1,6 +1,6 @@
 const forecastOffsets = {"short_range": 1, "medium_range": 3, "medium_range_no_da": 3, "long_range": 6};
 
-window.onload = function() {
+$(function() {
     $("#table").on("change", function() {
         var table = $("#table").val();
         $("#forecast_offset").val(forecastOffsets[table]);
@@ -68,5 +68,5 @@ window.onload = function() {
             $("#loading-gif-div").hide();
          });
     });
-}
+});
     
