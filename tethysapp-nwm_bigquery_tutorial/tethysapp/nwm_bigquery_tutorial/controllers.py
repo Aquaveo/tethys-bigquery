@@ -77,9 +77,6 @@ class NWMBigQueryMap(MapLayout):
         return context
 
     def post(self, request, *args, **kwargs):
-        import pdb 
-        pdb.set_trace()
-        
         form_data = request.POST
 
         query_results = self.run_query(form_data)
