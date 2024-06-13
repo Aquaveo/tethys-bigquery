@@ -385,7 +385,7 @@ $(function () {
                 $("#loading-gif-div").hide();
                 query_run = true;
 
-                variable_selected = formData.get('variable_choice');
+                variable_selected = formData.get('variable');
                 reach_id_selected = formData.get('reach_id');
                 csvData = {};
 
